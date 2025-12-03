@@ -2,35 +2,42 @@
 
 {% block content %}
 
-  {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-  {% endif %}
+  <div class="auth-container">
+    <h2 class="auth-title">Вход в аккаунт</h2>
 
-  {% if next %}
-    {% if user.is_authenticated %}
-      <p>Your account doesn't have access to this page. To proceed,
-      please login with an account that has access.</p>
-    {% else %}
-      <p>Please login to see this page.</p>
+    {% if form.errors %}
+      <div class="alert alert-error">
+        Неверное имя или пароль. Попробуйте еще раз
+      </div>
     {% endif %}
-  {% endif %}
 
-  <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    <table>
-      <tr>
-        <td>{{ form.username.label_tag }}</td>
-        <td>{{ form.username }}</td>
-      </tr>
-      <tr>
-        <td>{{ form.password.label_tag }}</td>
-        <td>{{ form.password }}</td>
-      </tr>
-    </table>
-    <input type="submit" value="login">
-    <input type="hidden" name="next" value="{{ next }}">
-  </form>
+    {% if next %}
+      {% if user.is_authenticated %}
+        <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+      {% else %}
+        <p>Войдите чтобы увидеть эту страницу</p>
+      {% endif %}
+    {% endif %}
 
-  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+    <form method="post" action="{% url 'login' %}" class="auth-form">
+      {% csrf_token %}
+      <table class="auth-table">
+        <tr>
+          <td>{{ form.username.label_tag }}</td>
+          <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+          <td>{{ form.password.label_tag }}</td>
+          <td>{{ form.password }}</td>
+        </tr>
+      </table>
+      <button type="submit" class="btn btn-primary">login</button>
+      <input type="hidden" name="next" value="{{ next }}">
+    </form>
+
+    <p class="auth-footer-link">
+      <a href="{% url 'password_reset' %}">Lost password?</a>
+    </p>
+  </div>
 
 {% endblock %}

@@ -16,7 +16,7 @@ body {
   border-bottom: 1px solid black;
   width: 1200px;
   margin: 0 auto;
-  height: 64px;
+  height: 65px;
 }
 
 .logo {
@@ -26,24 +26,33 @@ body {
   color: black;
 }
 
+.main-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 50px;
+}
+
 .main-nav a {
   text-decoration: none;
   color: black;
   padding: 6px 8px;
   border-radius: 4px;
+
 }
 
-.main-nav a:hover {
-  background-color: #f1f5f9;
-  color: #1a202c;
+.logout-form button{
+  background: none;
+  border: none;
 }
+
 
 .main-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  height: 500px;
   margin: 0 auto;
   width: 1200px;
   gap: 30px;
@@ -57,3 +66,81 @@ body {
   font-size: 20px;
 }
 
+
+/* === Auth Form — стили под хедер и общий дизайн === */
+
+.auth-container {
+  max-width: 500px;
+  margin: 32px auto;
+  padding: 28px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.auth-title {
+  text-align: center;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 24px;
+  font-size: 28px;
+}
+
+/* Таблица формы (оставлена как в оригинале) */
+.auth-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.auth-table td {
+  padding: 8px 0;
+}
+
+.auth-table td:first-child {
+  width: 120px;
+  padding-right: 16px;
+  text-align: right;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.auth-table input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  background-color: #f9fafb;
+  font-size: 18px;
+}
+
+
+.btn-primary {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.alert-error {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.auth-footer-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.auth-footer-link a {
+  color: #3182ce;
+  text-decoration: none;
+  font-weight: 500;
+}
