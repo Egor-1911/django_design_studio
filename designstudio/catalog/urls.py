@@ -1,8 +1,12 @@
 from django.urls import path
 from . import views
-from .forms import RegisterForm
+from .forms import RegistrationForm
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('accounts/register/', views.register, name='register'),
+    path('accounts/registration/', views.registration, name='registration'),
+    path('design-request/', views.design_request_view, name='design_request'),
+    path('requests/', views.RequestsCreatedByUserListView.as_view(), name='my-requests'),
 ]
+
+

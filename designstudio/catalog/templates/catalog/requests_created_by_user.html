@@ -1,0 +1,36 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+  <div class="page-title">
+    <h1>Ваши заявки</h1>
+  </div>
+
+  {% if requests_list %}
+    <div class="requests-list">
+      {% for request in requests_list %}
+        <div class="request-card {% if request.is_overdue %}request-overdue{% endif %}">
+          <h3 class="request-title">{{ request.name }} - {{ request.get_room_type_display }}</h3>
+
+          <p class="request-desc">
+            {{ request.description }}
+          </p>
+          <div class="request-meta">
+            <div class="request-status">
+              {{ request.get_status_display }}
+            </div>
+            <div class="request-date">
+              Подана: {{ request.created_at|date:"d.m.Y" }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p>У вас пока нет созданных заявок.</p>
+      <a href="{% url 'design_request' %}" class="btn-submit">Создать заявку</a>
+    </div>
+  {% endif %}
+
+{% endblock %}

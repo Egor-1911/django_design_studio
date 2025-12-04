@@ -52,7 +52,6 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 500px;
   margin: 0 auto;
   width: 1200px;
   gap: 30px;
@@ -67,10 +66,9 @@ body {
 }
 
 
-/* === Auth Form — стили под хедер и общий дизайн === */
 
 .auth-container {
-  max-width: 500px;
+  width: 500px;
   margin: 32px auto;
   padding: 28px;
   background: white;
@@ -84,34 +82,6 @@ body {
   color: #2c3e50;
   margin-bottom: 24px;
   font-size: 28px;
-}
-
-/* Таблица формы (оставлена как в оригинале) */
-.auth-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.auth-table td {
-  padding: 8px 0;
-}
-
-.auth-table td:first-child {
-  width: 120px;
-  padding-right: 16px;
-  text-align: right;
-  font-weight: 500;
-  color: #4a5568;
-}
-
-.auth-table input {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
-  background-color: #f9fafb;
-  font-size: 18px;
 }
 
 
@@ -155,4 +125,137 @@ body {
 
 .logout a {
   font-size: 22px;
+}
+
+
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group input {
+  width: 100%;
+  height: 50px;
+  outline: none;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+.form-group textarea {
+  width: 100%;
+}
+
+.form-group-image {
+  width: auto;
+}
+
+.form-label-image input {
+  height: 100px;
+  width: auto;
+}
+
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.btn-submit {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
+}
+
+
+/* === Страница "Мои заявки" === */
+
+
+.page-title h1{
+  font-size: 34px;
+  font-weight: 700;
+  color: black;
+  margin: 0;
+}
+
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  gap: 16px;
+}
+
+.request-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  border: 3px solid darkblue;
+  gap: 20px;
+}
+
+.request-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 12px 0;
+}
+
+.request-desc {
+  color: #4a5568;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.request-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  color: #718096;
+}
+
+.request-status {
+  color: dodgerblue;
+}
+
+.request-date {
+  font-style: italic;
+}
+
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #718096;
+}
+
+.empty-state p {
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.request-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: #3182ce;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.request-link:hover {
+  text-decoration: underline;
+}
+
+/* Если заявка просрочена (опционально) */
+.request-overdue {
+  border-left-color: #e53e3e;
+  background-color: #fff5f5;
 }

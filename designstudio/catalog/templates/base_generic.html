@@ -17,7 +17,8 @@
           {% block topnav %}
             <a href="{% url 'index' %}">Главная</a>
             {% if user.is_authenticated %}
-            <a href="">Создать заявку</a>
+            <a href="{% url 'design_request' %}">Создать заявку</a>
+            <a href="{% url 'my-requests' %}">Мои заявки</a>
              <p>{{ user.get_username }}</p>
              <form class="logout-form" method="post" action="{% url 'logout' %}">
                  {% csrf_token %}
@@ -25,7 +26,7 @@
              </form>
            {% else %}
              <a href="{% url 'login' %}?next={{ request.path }}">Вход</a>
-              <a href="{% url 'register' %}">Регистрация</a>
+              <a href="{% url 'registration' %}">Регистрация</a>
 
            {% endif %}
           {% endblock %}

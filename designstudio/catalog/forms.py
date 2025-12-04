@@ -1,22 +1,36 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from .models import DesignRequest
 
-class RegisterForm(forms.Form):
+class RegistrationForm(forms.Form):
+    full_name = forms.CharField(
+        label='ФИО',
+        max_length=100,
+        widget=forms.TextInput(),
+    )
     username = forms.CharField(
         max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        label="Логин",
+        widget=forms.TextInput()
     )
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
+        label="Почта",
+        widget=forms.EmailInput()
     )
     password1 = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        label="Пароль",
+        widget=forms.PasswordInput()
     )
     password2 = forms.CharField(
-        label="Password confirmation",
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        label="Подтверждение пароля",
+        widget=forms.PasswordInput()
+    )
+
+    consent = forms.BooleanField(
+        label='Согласие на обработку персональных данных',
+        required=True,
+        error_messages={'required': 'Вы должны согласиться на обработку персональных данных.'}
     )
 
     def clean_username(self):
@@ -39,10 +53,35 @@ class RegisterForm(forms.Form):
         return password2
 
     def save(self):
-        # Создаём пользователя вручную
         user = User.objects.create_user(
             username=self.cleaned_data['username'],
             email=self.cleaned_data['email'],
             password=self.cleaned_data['password1']
         )
         return user
+
+
+
+
+class DesignRequestForm(forms.ModelForm):
+    class Meta:
+        model = DesignRequest
+        fields = ['name', 'room_type', 'description', 'image']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название заявки'}),
+            'description': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 10, 'placeholder': 'Пожелания к дизайну'}),
+            'room_type': forms.Select(attrs={'class': 'form-select'}),
+            'image': forms.FileInput(attrs={'class': 'form-input'}),
+        }
+        labels = {
+            'name': 'Название заявки',
+            'room_type': 'Тип помещения',
+            'description': 'Описание дизайна',
+            'image': 'Фото помещения или планировки',
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name or not name.strip():
+            raise ValidationError('Это поле обязательно для заполнения.')
+        return name.strip()
