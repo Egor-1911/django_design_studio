@@ -66,18 +66,20 @@ class RegistrationForm(forms.Form):
 class DesignRequestForm(forms.ModelForm):
     class Meta:
         model = DesignRequest
-        fields = ['name', 'room_type', 'description', 'image']
+        fields = ['name', 'category', 'room_type', 'description', 'image']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название заявки'}),
             'description': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 10, 'placeholder': 'Пожелания к дизайну'}),
             'room_type': forms.Select(attrs={'class': 'form-select'}),
             'image': forms.FileInput(attrs={'class': 'form-input'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
         }
         labels = {
             'name': 'Название заявки',
             'room_type': 'Тип помещения',
             'description': 'Описание дизайна',
             'image': 'Фото помещения или планировки',
+            'category': 'Категория заявки',
         }
 
     def clean_name(self):

@@ -250,12 +250,23 @@ body {
   text-decoration: none;
 }
 
-.request-link:hover {
-  text-decoration: underline;
+
+
+.request-image {
+  margin: 16px 0;
+  text-align: center;
 }
 
-/* Если заявка просрочена (опционально) */
-.request-overdue {
-  border-left-color: #e53e3e;
-  background-color: #fff5f5;
+.request-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.request-category {
+  color: #4a5568;
+  margin: 6px 0;
+  font-size: 0.95rem;
 }

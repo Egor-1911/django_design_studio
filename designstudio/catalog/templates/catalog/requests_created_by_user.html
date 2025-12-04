@@ -11,7 +11,19 @@
       {% for request in requests_list %}
         <div class="request-card {% if request.is_overdue %}request-overdue{% endif %}">
           <h3 class="request-title">{{ request.name }} - {{ request.get_room_type_display }}</h3>
-
+            <p class="request-category">
+              <strong>Категория:</strong> {{ request.get_category_display }}
+            </p>
+            {% if request.status == 'new' or request.status == 'rejected' %}
+              <div style="margin-top: 12px;">
+                <a href="{% url 'request-delete' request.id %}" class="btn-delete">Удалить заявку</a>
+              </div>
+            {% endif %}
+          {% if request.image %}
+              <div class="request-image">
+                <img src="{{ request.image.url }}" alt="Фото помещения" class="request-img">
+              </div>
+          {% endif %}
           <p class="request-desc">
             {{ request.description }}
           </p>

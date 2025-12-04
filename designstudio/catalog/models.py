@@ -12,11 +12,18 @@ class DesignRequest(models.Model):
         ('other', 'Другое'),
     ]
 
+    CATEGORY_CHOICES = [
+        ('3d', '3D-дизайн'),
+        ('2d', '2D-дизайн'),
+        ('sketch', 'Эскиз'),
+        ('full', 'Полный дизайн-проект'),
+        ('consult', 'Консультация'),
+    ]
+
     STATUS_CHOICES = [
         ('new', 'Новая'),
         ('in_progress', 'В работе'),
         ('completed', 'Завершена'),
-        ('rejected', 'Отклонена'),
     ]
 
     name = models.CharField('Имя', max_length=100, blank=True)
@@ -25,7 +32,8 @@ class DesignRequest(models.Model):
     status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='new')
     created_at = models.DateTimeField('Дата заявки', auto_now_add=True)
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    image = models.ImageField( 'Фото помещения или план', upload_to='request_images/', blank=True,null=True)
+    image = models.ImageField( 'Фото помещения или план', upload_to='request_images/', blank=True, null=True)
+    category = models.CharField('Категория заявки', max_length=20, choices=CATEGORY_CHOICES, default='sketch')
 
     def __str__(self):
         return "Заявка {self.name} — {self.get_room_type_display()}"

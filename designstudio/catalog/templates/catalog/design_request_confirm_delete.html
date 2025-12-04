@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div class="auth-container" style="max-width: 500px;">
+    <h2 class="auth-title">Подтверждение удаления</h2>
+
+    <p>Вы уверены, что хотите удалить заявку:</p>
+    <p><strong>{{ request.name }} — {{ request.get_category_display }}</strong></p>
+
+    <p style="color: #e53e3e; margin: 16px 0;">
+      После удаления восстановить заявку будет невозможно.
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn-submit" style="background-color: #e53e3e;">Да, удалить</button>
+      <a href="{% url 'my-requests' %}" class="btn-secondary" style="display: inline-block; margin-left: 10px;">Отмена</a>
+    </form>
+  </div>
+{% endblock %}
