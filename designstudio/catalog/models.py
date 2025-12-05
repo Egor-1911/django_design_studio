@@ -6,7 +6,6 @@ class DesignCategory(models.Model):
 
     class Meta:
         verbose_name = 'Категория заявки'
-        verbose_name_plural = 'Категории заявок'
         ordering = ['name']
 
     def __str__(self):
@@ -37,7 +36,9 @@ class DesignRequest(models.Model):
     created_at = models.DateTimeField('Дата заявки', auto_now_add=True)
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField( 'Фото помещения или план', upload_to='request_images/', blank=True, null=True)
-    category = models.ForeignKey(DesignCategory, on_delete=models.SET_NULL, null=True, verbose_name='Категория заявки')
+    category = models.ForeignKey(DesignCategory, on_delete=models.CASCADE, null=True, verbose_name='Категория заявки')
+    design_image = models.ImageField('Изображение дизайна', upload_to='design_results/', blank=True, null=True)
+    admin_comment = models.TextField('Комментарий администратора', blank=True)
 
     def __str__(self):
         return "Заявка {self.name} — {self.get_room_type_display()}"

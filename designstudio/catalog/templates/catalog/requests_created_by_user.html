@@ -2,45 +2,61 @@
 
 {% block content %}
 
-  <div class="page-title">
-    <h1>Здравствуйте {{ user.get_username }}</h1>
-    <h2>Ваши заявки</h2>
+  <div class="page-header">
+    <h1 class="page-title">Мои заявки</h1>
   </div>
+
+<div class="filter-panel">
+  <strong>Фильтр:</strong>
+  <a href="{% url 'my-requests' %}" style="margin-left: 10px; {% if not current_status %}{% endif %}">Все</a>
+  <a href="{% url 'my-requests' %}?status=new" style="margin-left: 10px; {% if current_status == 'new' %}{% endif %}">Новые</a>
+  <a href="{% url 'my-requests' %}?status=in_progress" style="margin-left: 10px; {% if current_status == 'in_progress' %}{% endif %}">В работе</a>
+  <a href="{% url 'my-requests' %}?status=completed" style="margin-left: 10px; {% if current_status == 'completed' %}{% endif %}">Завершены</a>
+</div>
 
   {% if requests_list %}
     <div class="requests-list">
       {% for request in requests_list %}
         <div class="request-card {% if request.is_overdue %}request-overdue{% endif %}">
-          <h3 class="request-title">{{ request.name }} - {{ request.get_room_type_display }}</h3>
+          <h3 class="request-title">{{ request.name }} — {{ request.get_room_type_display }}</h3>
+
+          {% if request.category %}
             <p class="request-category">
               <strong>Категория:</strong> {{ request.category.name }}
             </p>
+          {% endif %}
 
           {% if request.image %}
-              <div class="request-image">
-                <img src="{{ request.image.url }}" alt="Фото помещения" class="request-img">
-              </div>
+            <div class="request-image">
+              <img src="{{ request.image.url }}" alt="Фото помещения" class="request-img">
+            </div>
           {% endif %}
+
           <p class="request-desc">
             {{ request.description }}
           </p>
+
           <div class="request-meta">
             <div class="request-status">
-              {{ request.get_status_display }}
+              <p>{{ request.get_status_display }}</p>
             </div>
             {% if request.status == 'new' or request.status == 'rejected' %}
-              <div style="margin-top: 12px;">
-                <a href="{% url 'request-delete' request.id %}" class="btn-delete">Удалить заявку</a>
-              </div>
-            {% endif %}
+            <div style="margin-top: 12px;">
+              <a href="{% url 'request-delete' request.id %}" class="btn-delete">Удалить заявку</a>
+            </div>
+          {% endif %}
           </div>
 
+
+          <div class="request-date">
+              Подана: {{ request.created_at|date:"d.m.Y H:i" }}
+            </div>
         </div>
       {% endfor %}
     </div>
   {% else %}
     <div class="empty-state">
-      <p>У вас пока нет созданных заявок.</p>
+      <p>Нет заявок {% if current_status %}с выбранным статусом{% endif %}.</p>
       <a href="{% url 'design_request' %}" class="btn-submit">Создать заявку</a>
     </div>
   {% endif %}

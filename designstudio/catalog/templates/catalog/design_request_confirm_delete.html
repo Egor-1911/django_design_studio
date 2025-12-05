@@ -5,11 +5,8 @@
     <h2 class="auth-title">Подтверждение удаления</h2>
 
     <p>Вы уверены, что хотите удалить заявку:</p>
-    <p><strong>{{ request.name }} — {{ request.get_category_display }}</strong></p>
+    <p><strong>{{ request.name }}</strong></p>
 
-    <p style="color: #e53e3e; margin: 16px 0;">
-      После удаления восстановить заявку будет невозможно.
-    </p>
 
     <form method="post">
       {% csrf_token %}

@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from .models import DesignRequest
 import re
 import os
+from .models import DesignCategory
+
 
 
 class RegistrationForm(forms.Form):
@@ -46,8 +48,8 @@ class RegistrationForm(forms.Form):
         password1 = self.cleaned_data.get('password1')
         if not password1:
             raise ValidationError('Пароль обязателен.')
-        if len(password1) < 8:
-            raise ValidationError('Пароль должен содержать не менее 8 символов.')
+        # if len(password1) < 8:
+        #     raise ValidationError('Пароль должен содержать не менее 8 символов.')
         return password1
 
     def clean_password2(self):
@@ -120,3 +122,57 @@ class DesignRequestForm(forms.ModelForm):
             raise ValidationError('Прикрепите фотографию')
 
         return image
+
+
+class UpdateRequestStatusForm(forms.ModelForm):
+    class Meta:
+        model = DesignRequest
+        fields = ['status', 'admin_comment', 'design_image']
+        widgets = {
+            'admin_comment': forms.Textarea(attrs={'rows': 3, 'class': 'form-textarea'}),
+            'design_image': forms.FileInput(attrs={'class': 'form-input'}),
+        }
+        labels = {
+            'admin_comment': 'Комментарий',
+            'design_image': 'Изображение дизайна',
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.original_status = kwargs.pop('original_status', None)
+        super().__init__(*args, **kwargs)
+        if self.original_status == 'new':
+            self.fields['status'].choices = [
+                ('new', 'Новая'),
+                ('in_progress', 'Принято в работу'),
+                ('completed', 'Выполнено'),
+            ]
+        else:
+            self.fields['status'].widget = forms.HiddenInput()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get('status')
+        admin_comment = cleaned_data.get('admin_comment')
+        design_image = cleaned_data.get('design_image')
+
+        if self.original_status == 'new':
+            if status == 'in_progress' and not admin_comment:
+                raise ValidationError('Для статуса "Принято в работу" обязателен комментарий.')
+            if status == 'completed' and not design_image:
+                raise ValidationError('Для статуса "Выполнено" обязательно изображение дизайна.')
+
+        if self.original_status in ['in_progress', 'completed']:
+            if status != self.original_status:
+                raise ValidationError('Статус заявки нельзя изменить.')
+
+        return cleaned_data
+
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = DesignCategory
+        fields = ['name']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Название категории'}),
+        }

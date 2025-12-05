@@ -14,22 +14,27 @@
         <a href="{% url 'index' %}" class="logo">Design Pro</a>
         <nav class="main-nav">
 
-          {% block topnav %}
-            <a href="{% url 'index' %}">Главная</a>
-            {% if user.is_authenticated %}
-            <a href="{% url 'design_request' %}">Создать заявку</a>
-            <a href="{% url 'my-requests' %}">Мои заявки</a>
-             <p>{{ user.get_username }}</p>
-             <form class="logout-form" method="post" action="{% url 'logout' %}">
-                 {% csrf_token %}
-                 <button type="submit" class="btn btn-link">Выход</button>
-             </form>
-           {% else %}
-             <a href="{% url 'login' %}?next={{ request.path }}">Вход</a>
-              <a href="{% url 'registration' %}">Регистрация</a>
+            {% block topnav %}
+              <a href="{% url 'index' %}">Главная</a>
 
-           {% endif %}
-          {% endblock %}
+              {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                  <a href="{% url 'all-requests' %}">Все заявки</a>
+                  <a href="{% url 'manage-categories' %}">Категории</a>
+                {% else %}
+                  <a href="{% url 'design_request' %}">Создать заявку</a>
+                  <a href="{% url 'my-requests' %}">Мои заявки</a>
+                {% endif %}
+                <div class="nav-user">{{ user.get_username }}</div>
+                <form class="logout-form" method="post" action="{% url 'logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-logout">Выход</button>
+                </form>
+              {% else %}
+                <a href="{% url 'login' %}?next={{ request.path }}">Вход</a>
+                <a href="{% url 'registration' %}">Регистрация</a>
+              {% endif %}
+            {% endblock %}
         </nav>
     </header>
     <main class="main-content">

@@ -1,0 +1,44 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+  <div class="page-header">
+    <h1 class="page-title">Все заявки</h1>
+  </div>
+
+  {% if requests_list %}
+    <div class="requests-list">
+      {% for request in requests_list %}
+        <div class="request-card">
+          <div class="request-header">
+            <h3 class="request-name">{{ request.name }}</h3>
+            <div class="request-status">{{ request.get_status_display }}</div>
+          </div>
+
+          <div class="request-body">
+            <p><strong>Пользователь:</strong> {{ request.customer.username }}</p>
+            <p><strong>Категория:</strong> {{ request.category.name }}</p>
+            <p><strong>Тип помещения:</strong> {{ request.get_room_type_display }}</p>
+            {% if request.description %}
+              <p class="request-desc">{{ request.description|truncatewords:20 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="request-footer">
+            <div class="request-date">Подана: {{ request.created_at|date:"d.m.Y H:i" }}</div>
+          </div>
+          {% if user.is_superuser and request.status == 'new' %}
+            <div style="margin-top: 10px;">
+              <a href="{% url 'update-request-status' request.id %}" class="btn-secondary">Изменить статус</a>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p>Нет заявок.</p>
+    </div>
+  {% endif %}
+
+{% endblock %}

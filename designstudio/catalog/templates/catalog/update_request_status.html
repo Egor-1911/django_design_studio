@@ -1,0 +1,53 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div class="auth-container" style="max-width: 600px;">
+    <h2 class="auth-title">Изменить статус заявки</h2>
+    <p><strong>Заявка:</strong> {{ request_obj.name }}</p>
+    <p><strong>Текущий статус:</strong> {{ request_obj.get_status_display }}</p>
+
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error" style="margin-bottom: 20px;">
+        {% for error in form.non_field_errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="auth-form">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label class="form-label">{{ form.status.label }}</label>
+        {{ form.status }}
+        {% if form.status.errors %}
+          <div class="field-errors">{{ form.status.errors }}</div>
+        {% endif %}
+      </div>
+
+      {% if form.admin_comment in form %}
+        <div class="form-group">
+          <label class="form-label">{{ form.admin_comment.label }}</label>
+          {{ form.admin_comment }}
+          {% if form.admin_comment.errors %}
+            <div class="field-errors">{{ form.admin_comment.errors }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if form.design_image in form %}
+        <div class="form-group-image">
+          <label class="form-label">{{ form.design_image.label }}</label>
+          {{ form.design_image }}
+          {% if form.design_image.errors %}
+            <div class="field-errors">{{ form.design_image.errors }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <button type="submit" class="btn-submit">Сохранить</button>
+      <a href="{% url 'all-requests' %}" class="btn-secondary" style="display: inline-block; margin-left: 10px;">Отмена</a>
+    </form>
+  </div>
+{% endblock %}

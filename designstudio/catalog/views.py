@@ -9,23 +9,32 @@ from .models import DesignRequest
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import Http404
-
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import DeleteView
-
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.views.generic import ListView
+from .forms import UpdateRequestStatusForm
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
+from .models import DesignCategory
+from .forms import CategoryForm
 
 
 def index(request):
+    completed_requests = DesignRequest.objects.filter(
+        status='completed'
+    ).order_by('-created_at')[:4]
 
-    return render(request, 'index.html')
+    in_progress_count = DesignRequest.objects.filter(
+        status='in_progress'
+    ).count()
 
-# def login(request):
-#
-#     return render(request, 'login.html')
+    return render(request, 'index.html', {
+        'completed_requests': completed_requests,
+        'in_progress_count': in_progress_count,
+    })
 
-
-# views.py
 
 
 def registration(request):
@@ -57,21 +66,26 @@ def design_request_view(request):
                 design_request.customer = request.user
             design_request.save()
             messages.success(request, 'Ваша заявка успешно отправлена!')
-            return redirect('index')
+            return redirect('my-requests')
     else:
         form = DesignRequestForm()
     return render(request, 'catalog/design_request.html', {'form': form})
 
 
-class RequestsCreatedByUserListView(LoginRequiredMixin, generic.ListView):
-    model = DesignRequest
-    template_name = 'catalog/requests_created_by_user.html'
-    context_object_name = 'requests_list'
+@login_required
+def my_requests_view(request):
+    status = request.GET.get('status')
+    requests_list = DesignRequest.objects.filter(customer=request.user)
 
-    def get_queryset(self):
-        return(
-            DesignRequest.objects.filter(customer=self.request.user)
-        )
+    if status:
+        requests_list = requests_list.filter(status=status)
+
+    requests_list = requests_list.order_by('-created_at')
+
+    return render(request, 'catalog/requests_created_by_user.html', {
+        'requests_list': requests_list,
+        'current_status': status
+    })
 
 
 
@@ -97,3 +111,77 @@ class DesignRequestDeleteView(LoginRequiredMixin, DeleteView):
             return redirect('my-requests')
         return super().post(request, *args, **kwargs)
 
+
+
+
+class AllDesignRequestsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = DesignRequest
+    template_name = 'catalog/all_requests.html'
+    context_object_name = 'requests_list'
+    ordering = ['-created_at']
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def get_queryset(self):
+        return DesignRequest.objects.all()
+
+
+
+
+def is_admin(user):
+    return user.is_superuser
+
+
+@login_required
+@user_passes_test(is_admin)
+def update_request_status(request, request_id):
+    design_request = get_object_or_404(DesignRequest, id=request_id)
+
+    if request.method == 'POST':
+        form = UpdateRequestStatusForm(
+            request.POST,
+            request.FILES,
+            instance=design_request,
+            original_status=design_request.status
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Статус заявки успешно обновлён.')
+            return redirect('all-requests')
+    else:
+        form = UpdateRequestStatusForm(
+            instance=design_request,
+            original_status=design_request.status
+        )
+
+    return render(request, 'catalog/update_request_status.html', {
+        'form': form,
+        'request_obj': design_request
+    })
+
+
+@user_passes_test(is_admin)
+def manage_categories(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Категория добавлена.')
+            return redirect('manage-categories')
+    else:
+        form = CategoryForm()
+
+    categories = DesignCategory.objects.all()
+    return render(request, 'catalog/manage_categories.html', {
+        'form': form,
+        'categories': categories
+    })
+
+
+@user_passes_test(is_admin)
+def delete_category(request, category_id):
+    category = get_object_or_404(DesignCategory, id=category_id)
+    category.delete()
+    messages.success(request, 'Категория удалена.')
+    return redirect('manage-categories')

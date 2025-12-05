@@ -1,8 +1,38 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h1>Дизайн Студия Design PRO</h1>
-    <p>
-      Добро пожаловать в нашу студию дизайна
-    </p>
+  <div class="page-header">
+    <h1 class="page-title">Дизайн Студия Design PRO</h1>
+  </div>
+
+
+  <div class="stats-panel">
+    <p>Заявок в работе: <strong>{{ in_progress_count }}</strong></p>
+  </div>
+
+
+  <h2 style="margin-top: 40px; margin-bottom: 20px;">Последние выполненные работы</h2>
+
+  {% if completed_requests %}
+    <div class="portfolio-grid">
+      {% for request in completed_requests %}
+        <div class="portfolio-item">
+          <div class="portfolio-image">
+            {% if request.design_image %}
+              <img src="{{ request.design_image.url }}" alt="{{ request.name }}" class="portfolio-img">
+            {% else %}
+              <div class="no-image">Нет изображения</div>
+            {% endif %}
+          </div>
+          <div class="portfolio-info">
+            <h3>{{ request.name }}</h3>
+            <p><strong>Категория:</strong> {{ request.category.name|default:"—" }}</p>
+            <p class="timestamp">{{ request.created_at|date:"d.m.Y H:i" }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Нет выполненных заявок.</p>
+  {% endif %}
 {% endblock %}

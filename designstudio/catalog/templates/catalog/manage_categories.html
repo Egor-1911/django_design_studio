@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <div class="page-header">
+    <h1 class="page-title">Управление категориями заявок</h1>
+  </div>
+
+  <div class="auth-container">
+    <h3>Добавить новую категорию</h3>
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">{{ form.name.label }}</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+          <div class="field-errors">{{ form.name.errors }}</div>
+        {% endif %}
+      </div>
+      <button type="submit" class="btn-submit">Добавить</button>
+    </form>
+  </div>
+
+  <div class="page-header" style="margin-top: 40px;">
+    <h2>Существующие категории</h2>
+  </div>
+
+  {% if categories %}
+    <ul style="list-style: none; padding: 0;">
+      {% for cat in categories %}
+        <li style="display: flex; justify-content: space-between; align-items: center; padding: 12px; margin: 8px 0; background: #f8fafc; border-radius: 8px;">
+          <span>{{ cat.name }}</span>
+          <form method="post" action="{% url 'delete-category' cat.id %}" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">Удалить</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Нет категорий.</p>
+  {% endif %}
+
+{% endblock %}
