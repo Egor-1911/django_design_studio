@@ -3,7 +3,8 @@
 {% block content %}
 
   <div class="page-title">
-    <h1>Ваши заявки</h1>
+    <h1>Здравствуйте {{ user.get_username }}</h1>
+    <h2>Ваши заявки</h2>
   </div>
 
   {% if requests_list %}
@@ -12,13 +13,9 @@
         <div class="request-card {% if request.is_overdue %}request-overdue{% endif %}">
           <h3 class="request-title">{{ request.name }} - {{ request.get_room_type_display }}</h3>
             <p class="request-category">
-              <strong>Категория:</strong> {{ request.get_category_display }}
+              <strong>Категория:</strong> {{ request.category.name }}
             </p>
-            {% if request.status == 'new' or request.status == 'rejected' %}
-              <div style="margin-top: 12px;">
-                <a href="{% url 'request-delete' request.id %}" class="btn-delete">Удалить заявку</a>
-              </div>
-            {% endif %}
+
           {% if request.image %}
               <div class="request-image">
                 <img src="{{ request.image.url }}" alt="Фото помещения" class="request-img">
@@ -31,10 +28,13 @@
             <div class="request-status">
               {{ request.get_status_display }}
             </div>
-            <div class="request-date">
-              Подана: {{ request.created_at|date:"d.m.Y" }}
-            </div>
+            {% if request.status == 'new' or request.status == 'rejected' %}
+              <div style="margin-top: 12px;">
+                <a href="{% url 'request-delete' request.id %}" class="btn-delete">Удалить заявку</a>
+              </div>
+            {% endif %}
           </div>
+
         </div>
       {% endfor %}
     </div>

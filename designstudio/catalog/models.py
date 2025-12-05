@@ -1,6 +1,18 @@
 from django.db import models
 from django.conf import settings
 
+class DesignCategory(models.Model):
+    name = models.CharField('Название категории', max_length=100, unique=True)
+
+    class Meta:
+        verbose_name = 'Категория заявки'
+        verbose_name_plural = 'Категории заявок'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class DesignRequest(models.Model):
     ROOM_CHOICES = [
         ('living', 'Гостиная'),
@@ -10,14 +22,6 @@ class DesignRequest(models.Model):
         ('office', 'Офис'),
         ('commercial', 'Коммерческое помещение'),
         ('other', 'Другое'),
-    ]
-
-    CATEGORY_CHOICES = [
-        ('3d', '3D-дизайн'),
-        ('2d', '2D-дизайн'),
-        ('sketch', 'Эскиз'),
-        ('full', 'Полный дизайн-проект'),
-        ('consult', 'Консультация'),
     ]
 
     STATUS_CHOICES = [
@@ -33,7 +37,9 @@ class DesignRequest(models.Model):
     created_at = models.DateTimeField('Дата заявки', auto_now_add=True)
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField( 'Фото помещения или план', upload_to='request_images/', blank=True, null=True)
-    category = models.CharField('Категория заявки', max_length=20, choices=CATEGORY_CHOICES, default='sketch')
+    category = models.ForeignKey(DesignCategory, on_delete=models.SET_NULL, null=True, verbose_name='Категория заявки')
 
     def __str__(self):
         return "Заявка {self.name} — {self.get_room_type_display()}"
+
+

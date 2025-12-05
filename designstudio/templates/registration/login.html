@@ -15,12 +15,12 @@
       {% csrf_token %}
 
       <div class="form-group">
-        <label class="form-label"> {{ form.username.label }}</label>
+        <label class="form-label">Логин</label>
         {{ form.username }}
       </div>
 
       <div class="form-group">
-        <label class="form-label">{{ form.password.label}}</label>
+        <label class="form-label">Пароль</label>
         {{ form.password }}
       </div>
 
@@ -28,9 +28,9 @@
 <!--      <input type="hidden" name="next" value="{{ next }}">-->
     </form>
 
-    <p class="auth-footer-link" style="text-align: center; margin-top: 20px;">
-      <a href="{% url 'password_reset' %}">Забыли пароль?</a>
-    </p>
+<!--    <p class="auth-footer-link" style="text-align: center; margin-top: 20px;">-->
+<!--      <a href="{% url 'password_reset' %}">Забыли пароль?</a>-->
+<!--    </p>-->
     <p class="auth-footer-link" style="text-align: center;">
       Нет аккаунта? <a href="{% url 'registration' %}">Зарегистрироваться</a>
     </p>

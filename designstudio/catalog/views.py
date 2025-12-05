@@ -74,6 +74,7 @@ class RequestsCreatedByUserListView(LoginRequiredMixin, generic.ListView):
         )
 
 
+
 class DesignRequestDeleteView(LoginRequiredMixin, DeleteView):
     model = DesignRequest
     template_name = 'catalog/design_request_confirm_delete.html'
